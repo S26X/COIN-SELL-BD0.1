@@ -47,36 +47,64 @@ body { background: var(--bg); margin: 0; padding: 15px; padding-bottom: 120px; c
 
 .coin-card { 
     background: var(--card); 
-    border-radius: 20px; /* Ektu kom kora hoyeche compact looker jonno */
-    padding: 15px;      /* Padding komiye card small kora hoyeche */
-    margin-bottom: 12px; 
-    border: 1.5px solid var(--border); 
+    border-radius: 15px; /* Choto box er sathe match kore radius komano hoyeche */
+    padding: 10px 12px;  /* Padding komanor fole box-ti halka choto hoyeche */
+    margin-bottom: 10px; 
+    /* Muta Green Border Line */
+    border: 2.5px solid rgba(34, 197, 94, 0.6); 
     position: relative; 
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .coin-card.offline { 
-    opacity: 0.6; 
+    opacity: 0.5; 
     filter: grayscale(1); 
-    pointer-events: none; 
+    pointer-events: none;
+    border-color: #334155; 
 }
 
-/* Status Badge - Compact Version */
+/* Status Badge - Aro compact kora hoyeche */
 .status-badge { 
     position: absolute; 
-    top: 15px; 
-    right: 15px; 
-    padding: 4px 10px; 
-    border-radius: 8px; 
-    font-size: 9px; 
+    top: 8px; 
+    right: 8px; 
+    padding: 2px 6px; 
+    border-radius: 5px; 
+    font-size: 7.5px; 
     font-weight: 900; 
 }
+
 .status-online { background: #064e3b; color: #6ee7b7; }
 .status-offline { background: #7f1d1d; color: #fca5a5; }
 
-.rate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-.rate-box { background: #1919e0; padding: 12px; border-radius: 18px; text-align: center; border: 1px solid var(--border); }
+.rate-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 8px; 
+    margin-top: 8px; 
+}
+
+.rate-box { 
+    background: #1e293b; 
+    padding: 10px 8px;    /* Padding ektu barano hoyeche jate mota rate-val ta fit hoy */
+    border-radius: 14px; 
+    text-align: center; 
+    border: 1px solid var(--border); 
+}
 .rate-box small { font-size: 9px; color: #94a3b8; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 4px; }
-.rate-val { font-size: 16px; font-weight: 800; color: #fff; }
+.rate-val { 
+    font-size: 13px; 
+    font-weight: 900;     /* Extremely Bold Font */
+    color: #fff; 
+    background: #2563eb; 
+    padding: 8px 4px;     /* Vertical padding bariye mota kora hoyeche */
+    border-radius: 10px;  /* Corner arektu round kora holo muta looker sathe match korte */
+    display: block;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); /* Shadow ektu barano hoyeche thickness bujhanor jonno */
+    border: 1px solid rgba(255, 255, 255, 0.1);    /* Halka ekta inner border jate thickness sposto hoy */
+}
+
+
 
 /* MODALS */
 .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: none; align-items: flex-end; z-index: 2000; }
