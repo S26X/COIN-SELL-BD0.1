@@ -736,7 +736,7 @@ function fetchLeaderboard() {
         let html = "<h3 style='margin: 15px 5px;'>🏆 Top 10 Sellers</h3>";
         
         if (top10.length === 0) {
-            html += "<p style='text-align:center; padding:20px; color:#94a3b8;'>No earners yet.</p>";
+            html += "<p style='text-align:center; padding:20px; color:#ff0303;'>No earners yet.</p>";
         } else {
             top10.forEach((d, i) => {
                 let medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
@@ -900,53 +900,61 @@ function renderAdminData() {
 
                 if (shouldShow) {
                     const statusColor = o.status === 'pending' ? '#f59e0b' : (o.status === 'completed' ? '#10b981' : '#ef4444');
+                    
+                    // Dark Mode Optimized Colors
+                    const boxBg = "#1e293b";      // Card Background
+                    const gridItemBg = "#0f172a"; // Inner Box Background
+                    const textColor = "#f1f5f9";  // Main Text
+                    const mutedText = "#94a3b8"; // Small Text
+                    const copyBg = "#334155";    // Copy area background
+
                     html += `
-    <div class="adm-order-box" style="border-left: 5px solid ${statusColor}; padding: 12px; margin-bottom: 12px; border-radius: 15px; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-        <div class="order-header" style="margin-bottom: 8px;">
-            <b style="font-size: 14px;">@${o.user}</b>
-            <span class="status-badge" style="background:${statusColor}15; color:${statusColor}; font-size: 10px; padding: 4px 8px; border-radius: 8px;">${o.status.toUpperCase()}</span>
+    <div class="adm-order-box" style="border-left: 5px solid ${statusColor}; padding: 12px; margin-bottom: 12px; border-radius: 15px; background: ${boxBg}; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155;">
+        <div class="order-header" style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <b style="font-size: 14px; color: ${textColor};">@${o.user}</b>
+            <span class="status-badge" style="background:${statusColor}20; color:${statusColor}; font-size: 10px; padding: 4px 8px; border-radius: 8px; font-weight: 800;">${o.status.toUpperCase()}</span>
         </div>
         
         <div class="order-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px;">
-            <div class="grid-item" style="background: #f8fafc; padding: 6px; border-radius: 8px;">
-                <small style="font-size: 9px; color: #64748b; font-weight: 700;">COIN</small>
-                <b style="display: block; font-size: 12px;">${o.coin}</b>
+            <div class="grid-item" style="background: ${gridItemBg}; padding: 6px; border-radius: 8px; border: 1px solid #334155;">
+                <small style="font-size: 9px; color: ${mutedText}; font-weight: 700;">COIN</small>
+                <b style="display: block; font-size: 12px; color: ${textColor};">${o.coin}</b>
             </div>
-            <div class="grid-item" style="background: #f8fafc; padding: 6px; border-radius: 8px;">
-                <small style="font-size: 9px; color: #64748b; font-weight: 700;">METHOD</small>
-                <b style="display: block; font-size: 12px;">${o.method}</b>
+            <div class="grid-item" style="background: ${gridItemBg}; padding: 6px; border-radius: 8px; border: 1px solid #334155;">
+                <small style="font-size: 9px; color: ${mutedText}; font-weight: 700;">METHOD</small>
+                <b style="display: block; font-size: 12px; color: ${textColor};">${o.method}</b>
             </div>
-            <div class="grid-item" style="background: #f8fafc; padding: 6px; border-radius: 8px;">
-                <small style="font-size: 9px; color: #64748b; font-weight: 700;">ASSET</small>
-                <b style="display: block; font-size: 12px;">${o.amt}</b>
+            <div class="grid-item" style="background: ${gridItemBg}; padding: 6px; border-radius: 8px; border: 1px solid #334155;">
+                <small style="font-size: 9px; color: ${mutedText}; font-weight: 700;">ASSET</small>
+                <b style="display: block; font-size: 12px; color: ${textColor};">${o.amt}</b>
             </div>
-            <div class="grid-item" style="background: #ecfdf5; padding: 6px; border-radius: 8px;">
-                <small style="font-size: 9px; color: #059669; font-weight: 700;">PAYOUT</small>
+            <div class="grid-item" style="background: #064e3b; padding: 6px; border-radius: 8px; border: 1px solid #065f46;">
+                <small style="font-size: 9px; color: #6ee7b7; font-weight: 700;">PAYOUT</small>
                 <b style="display: block; font-size: 12px; color: #10b981;">${o.payable}৳</b>
             </div>
         </div>
 
-        <div onclick="copyToClipboard('${o.number}')" style="padding: 8px; background: #f1f5f9; border-radius: 10px; border: 1px dashed #cbd5e1; cursor: pointer; margin-bottom: 8px;">
-            <small style="color: #64748b; display: block; font-size: 9px; font-weight: 800; text-transform: uppercase;">Tap to copy</small>
-            <b style="color: #2563eb; font-size: 13px;">📱 ${o.number}</b>
+        <div onclick="copyToClipboard('${o.number}')" style="padding: 8px; background: ${copyBg}; border-radius: 10px; border: 1px dashed #475569; cursor: pointer; margin-bottom: 8px;">
+            <small style="color: ${mutedText}; display: block; font-size: 9px; font-weight: 800; text-transform: uppercase;">Tap to copy</small>
+            <b style="color: #60a5fa; font-size: 13px;">📱 ${o.number}</b>
         </div>
 
         <div style="padding-left: 4px; margin-bottom: 10px;">
-            <small style="color: #94a3b8; font-size: 9px; font-weight: 700;">SENDER:</small>
-            <b style="font-size: 11px;"> ${o.sender}</b>
+            <small style="color: ${mutedText}; font-size: 9px; font-weight: 700;">SENDER:</small>
+            <b style="font-size: 11px; color: ${textColor};"> ${o.sender}</b>
         </div>
 
         <div style="display: flex; gap: 8px;">
             ${o.status === 'pending' ? `
                 <button onclick="updateOrderStatus('${o.id}','completed','${o.user}',${o.payable})" style="flex: 2; background: #10b981; color: white; border: none; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;">APPROVE</button>
-                <button onclick="updateOrderStatus('${o.id}','rejected')" style="flex: 1; background: #fee2e2; color: #ef4444; border: none; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;">REJECT</button>
+                <button onclick="updateOrderStatus('${o.id}','rejected')" style="flex: 1; background: #450a0a; color: #f87171; border: 1px solid #7f1d1d; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;">REJECT</button>
             ` : ''}
-            <button onclick="if(confirm('Delete?')) db.ref('orders/${o.id}').remove()" style="background: #f1f5f9; border: none; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;">🗑️</button>
+            <button onclick="if(confirm('Delete?')) db.ref('orders/${o.id}').remove()" style="background: #334155; border: none; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white;">🗑️</button>
         </div>
     </div>`;
                 }
             });
-            area.innerHTML = html || "<center style='padding:50px; color:#94a3b8;'>No Records Found</center>";
+            area.innerHTML = html || "<center style='padding:50px; color:#64748b;'>No Records Found</center>";
         });
     }
 }
@@ -989,7 +997,7 @@ function renderSettingsUI(container) {
             <input type="text" id="adm-link-help" class="adm-input" placeholder="Support Link">
             <button onclick="updateAdmLinks()" class="adm-btn" style="background:#2563eb; color:white;">UPDATE LINKS</button>
             <h4 style="margin-top:25px; margin-bottom:15px;">🏆 Leaderboard</h4>
-            <div id="adm-leaderboard-list" style="background:#f8fafc; border-radius:12px; padding:10px; max-height:200px; overflow-y:auto;"></div>
+            <div id="adm-leaderboard-list" style="background:#ff002f; border-radius:12px; padding:10px; max-height:200px; overflow-y:auto;"></div>
             <button onclick="resetSalesStats()" class="adm-btn" style="background:#ef4444; color:white; margin-top:30px;">⚠️ RESET SALES STATS</button>
         </div>`;
     fetchAdminSettingsData();
