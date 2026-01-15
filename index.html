@@ -52,7 +52,7 @@ body { background: var(--bg); margin: 0; padding: 15px; padding-bottom: 120px; c
 .status-offline { background: #7f1d1d; color: #fca5a5; }
 
 .rate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-.rate-box { background: #0f172a; padding: 12px; border-radius: 18px; text-align: center; border: 1px solid var(--border); }
+.rate-box { background: #1919e0; padding: 12px; border-radius: 18px; text-align: center; border: 1px solid var(--border); }
 .rate-box small { font-size: 9px; color: #94a3b8; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 4px; }
 .rate-val { font-size: 16px; font-weight: 800; color: #fff; }
 
@@ -512,7 +512,7 @@ body { background: var(--bg); margin: 0; padding: 15px; padding-bottom: 120px; c
                     <div class="status-badge ${on?'status-online':'status-offline'}">${on?'● Online':'● Offline'}</div>
                     <div style="display:flex; align-items:center; gap:15px;">
                         <div class="icon-box">💰</div>
-                        <div><b style="font-size:18px;">${c.key}</b><br><small style="color:#64748b; font-weight:800;">MARKET RATE</small></div>
+                        <div><b style="font-size:18px;">${c.key}</b><br><small style="color:#0000FF; font-weight:800;">MARKET RATE</small></div>
                     </div>
                     <div class="rate-grid">
                         <div class="rate-box"><small>User Rate</small><div class="rate-val">${v.userRate}৳</div></div>
@@ -1131,6 +1131,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
 
 
