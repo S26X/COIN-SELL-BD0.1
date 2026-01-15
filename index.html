@@ -743,8 +743,8 @@ function fetchLeaderboard() {
                 html += `
                 <div class="action-card" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="font-weight:900; color:#64748b; width:25px; font-size:14px;">${medal}</div>
-                        <b style="font-size:14px; color:#1e293b;">@${d.user}</b>
+                        <div style="font-weight:900; color:#0223f7; width:25px; font-size:14px;">${medal}</div>
+                        <b style="font-size:14px; color:#0061ff;">@${d.user}</b>
                     </div>
                     <b style="color:#10b981; font-size:15px;">${parseFloat(d.totalAmount).toFixed(2)}৳</b>
                 </div>`;
@@ -972,12 +972,18 @@ function copyToClipboard(val) {
 
 
 function renderSettingsUI(container) {
+    const cardBg = "#1e293b";
+    const innerBg = "#0f172a";
+    const borderColor = "#334155";
+    const textColor = "#f1f5f9";
+
     container.innerHTML = `
-        <div class="settings-card" style="background:white; padding:15px; border-radius:20px; border:1px solid #e2e8f0;">
-            <h4 style="margin-bottom:15px;">💎 Market Rates & Config</h4>
+        <div class="settings-card" style="background:${cardBg}; padding:15px; border-radius:20px; border:1px solid ${borderColor}; color: ${textColor};">
+            <h4 style="margin-bottom:15px; color:#fff;">💎 Market Rates & Config</h4>
             <div id="adm-market-config-list">Loading market data...</div>
-            <div style="background:#f8fafc; padding:15px; border-radius:15px; border:1px dashed #cbd5e1; margin-bottom:20px;">
-                <small style="font-weight:800; display:block; margin-bottom:8px;">+ ADD NEW COIN</small>
+            
+            <div style="background:${innerBg}; padding:15px; border-radius:15px; border:1px dashed #475569; margin-bottom:20px;">
+                <small style="font-weight:800; display:block; margin-bottom:8px; color:#94a3b8;">+ ADD NEW COIN</small>
                 <input type="text" id="new-c-name" class="adm-input" placeholder="Coin Name">
                 <input type="text" id="new-c-tid" class="adm-input" placeholder="Address/UID">
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
@@ -986,35 +992,43 @@ function renderSettingsUI(container) {
                 </div>
                 <button onclick="addNewCoin()" class="adm-btn" style="background:#10b981; color:white;">ADD COIN</button>
             </div>
-            <h4 style="margin-bottom:15px;">💳 Payment Methods</h4>
+
+            <h4 style="margin-bottom:15px; color:#fff;">💳 Payment Methods</h4>
             <div id="adm-payment-list"></div>
             <div style="display:flex; gap:8px; margin-top:10px;">
                 <input type="text" id="new-pay-name" class="adm-input" placeholder="New Method" style="margin:0;">
-                <button onclick="addNewPayment()" class="adm-btn" style="width:80px; background:#1e293b; color:white;">ADD</button>
+                <button onclick="addNewPayment()" class="adm-btn" style="width:80px; background:#3b82f6; color:white;">ADD</button>
             </div>
-            <h4 style="margin-top:25px; margin-bottom:15px;">🔗 Social Links</h4>
+
+            <h4 style="margin-top:25px; margin-bottom:15px; color:#fff;">🔗 Social Links</h4>
             <input type="text" id="adm-link-chan" class="adm-input" placeholder="Channel Link">
             <input type="text" id="adm-link-help" class="adm-input" placeholder="Support Link">
             <button onclick="updateAdmLinks()" class="adm-btn" style="background:#2563eb; color:white;">UPDATE LINKS</button>
-            <h4 style="margin-top:25px; margin-bottom:15px;">🏆 Leaderboard</h4>
-            <div id="adm-leaderboard-list" style="background:#ff002f; border-radius:12px; padding:10px; max-height:200px; overflow-y:auto;"></div>
+
+            <h4 style="margin-top:25px; margin-bottom:15px; color:#fff;">🏆 Leaderboard</h4>
+            <div id="adm-leaderboard-list" style="background:#0f172a; border-radius:12px; padding:10px; max-height:200px; overflow-y:auto; border: 1px solid ${borderColor};"></div>
+            
             <button onclick="resetSalesStats()" class="adm-btn" style="background:#ef4444; color:white; margin-top:30px;">⚠️ RESET SALES STATS</button>
         </div>`;
     fetchAdminSettingsData();
 }
 
 function fetchAdminSettingsData() {
+    const borderColor = "#334155";
+    const textColor = "#f1f5f9";
+    const innerBg = "#0f172a";
+
     db.ref('leaderboard').on('value', s => {
         let h = "";
         s.forEach(u => {
             const d = u.val();
-            h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #eee;">
-                <div><b>@${d.user}</b><br><small style="color:#10b981">${parseFloat(d.totalAmount).toFixed(2)}৳</small></div>
+            h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid ${borderColor};">
+                <div><b style="color:${textColor}">@${d.user}</b><br><small style="color:#10b981; font-weight:bold;">${parseFloat(d.totalAmount).toFixed(2)}৳</small></div>
                 <button style="border:none; color:#ef4444; background:none; font-weight:800; cursor:pointer;" onclick="if(confirm('Delete user?')) db.ref('leaderboard/${d.user}').remove()">DEL</button>
             </div>`;
         });
         const lbArea = document.getElementById('adm-leaderboard-list');
-        if(lbArea) lbArea.innerHTML = h || "No Users";
+        if(lbArea) lbArea.innerHTML = h || "<center style='color:#64748b; padding:10px;'>No Users</center>";
     });
 
     db.ref('marketConfig').on('value', snap => {
@@ -1022,37 +1036,31 @@ function fetchAdminSettingsData() {
         snap.forEach(c => {
             const v = c.val();
             html += `
-            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:15px; padding:12px; margin-bottom:10px;">
+            <div style="background:#1e293b; border:1px solid ${borderColor}; border-radius:15px; padding:12px; margin-bottom:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <b>💎 ${c.key}</b>
+                    <b style="color:#fff;">💎 ${c.key}</b>
                     <label class="adm-switch"><input type="checkbox" ${v.status?'checked':''} onchange="db.ref('marketConfig/${c.key}').update({status:this.checked})"><span class="adm-slider"></span></label>
                 </div>
-                <input type="text" class="adm-input" value="${v.transferId}" onchange="db.ref('marketConfig/${c.key}').update({transferId: this.value})" style="margin-top:8px;">
+                <input type="text" class="adm-input" value="${v.transferId}" onchange="db.ref('marketConfig/${c.key}').update({transferId: this.value})" style="margin-top:8px; background:#0f172a; border-color:${borderColor};">
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                    <div style="background:#f8fafc; padding:5px; border-radius:8px; text-align:center;"><small style="font-size:8px;">USER</small><br><input type="number" value="${v.userRate}" onchange="db.ref('marketConfig/${c.key}').update({userRate: parseFloat(this.value)})" style="width:100%; border:none; background:transparent; font-weight:800; text-align:center;"></div>
-                    <div style="background:#f8fafc; padding:5px; border-radius:8px; text-align:center;"><small style="font-size:8px;">ADMIN</small><br><input type="number" value="${v.adminRate}" onchange="db.ref('marketConfig/${c.key}').update({adminRate: parseFloat(this.value)})" style="width:100%; border:none; background:transparent; font-weight:800; text-align:center;"></div>
+                    <div style="background:${innerBg}; padding:5px; border-radius:8px; text-align:center; border: 1px solid ${borderColor};"><small style="font-size:8px; color:#94a3b8;">USER</small><br><input type="number" value="${v.userRate}" onchange="db.ref('marketConfig/${c.key}').update({userRate: parseFloat(this.value)})" style="width:100%; border:none; background:transparent; font-weight:800; text-align:center; color:#fff;"></div>
+                    <div style="background:${innerBg}; padding:5px; border-radius:8px; text-align:center; border: 1px solid ${borderColor};"><small style="font-size:8px; color:#94a3b8;">ADMIN</small><br><input type="number" value="${v.adminRate}" onchange="db.ref('marketConfig/${c.key}').update({adminRate: parseFloat(this.value)})" style="width:100%; border:none; background:transparent; font-weight:800; text-align:center; color:#fff;"></div>
                 </div>
-                <button class="adm-btn" style="color:red; background:none; font-size:11px; margin-top:5px;" onclick="if(confirm('Remove?')) db.ref('marketConfig/${c.key}').remove()">REMOVE COIN</button>
+                <button class="adm-btn" style="color:#f87171; background:none; font-size:11px; margin-top:5px; font-weight:bold;" onclick="if(confirm('Remove?')) db.ref('marketConfig/${c.key}').remove()">REMOVE COIN</button>
             </div>`;
         });
         const mcArea = document.getElementById('adm-market-config-list');
         if(mcArea) mcArea.innerHTML = html;
     });
 
-    db.ref('settings/links').once('value', s => {
-        const d = s.val() || {};
-        if(document.getElementById('adm-link-chan')) document.getElementById('adm-link-chan').value = d.channel || "";
-        if(document.getElementById('adm-link-help')) document.getElementById('adm-link-help').value = d.help || "";
-    });
-
     db.ref('paymentMethods').on('value', s => {
         let h = "";
         s.forEach(p => {
-            h += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee; align-items:center;">
+            h += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid ${borderColor}; align-items:center; color:${textColor}">
                 <span>${p.key}</span>
                 <div style="display:flex; gap:12px; align-items:center;">
                     <label class="adm-switch"><input type="checkbox" ${p.val().status?'checked':''} onchange="db.ref('paymentMethods/${p.key}').update({status:this.checked})"><span class="adm-slider"></span></label>
-                    <button style="border:none; color:red; background:none; cursor:pointer;" onclick="db.ref('paymentMethods/${p.key}').remove()">🗑️</button>
+                    <button style="border:none; color:#ef4444; background:none; cursor:pointer; font-size:16px;" onclick="db.ref('paymentMethods/${p.key}').remove()">🗑️</button>
                 </div>
             </div>`;
         });
