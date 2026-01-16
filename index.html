@@ -69,7 +69,7 @@ body { background: var(--bg); margin: 0; padding: 15px; padding-bottom: 120px; c
     text-transform: uppercase;
 }
 .status-online { background: #064e3b; color: #10b981; }
-.status-offline { background: #450a0a; color: #f87171; }
+.status-offline { background: #FF2E2E; color: #A30000; }
 
 /* Sudhu Online card er niche CLICK HERE ashbe */
 .coin-card:not(.offline)::after {
@@ -601,7 +601,7 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
                     <div class="status-badge ${on?'status-online':'status-offline'}">${on?'● Online':'● Offline'}</div>
                     <div style="display:flex; align-items:center; gap:15px;">
                         <div class="icon-box">🪙</div>
-                        <div><b style="font-size:18px;">${c.key}</b><br><small style="color:#0000FF; font-weight:800;">MARKET RATE</small></div>
+                        <div><b style="font-size:18px;">${c.key}</b><br><small style="color:#ADADAD; font-weight:800;">MARKET RATE</small></div>
                     </div>
                     <div class="rate-grid">
                         <div class="rate-box"><small>User Rate</small><div class="rate-val">${v.userRate}৳</div></div>
