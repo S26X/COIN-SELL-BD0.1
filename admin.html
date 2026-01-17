@@ -143,14 +143,14 @@
 
 <script> 
 const firebaseConfig = {
-    apiKey: "AIzaSyDKHipvVRpal_Or_P_R-2_vX0e2TLPVYG4",
-    authDomain: "coin-market-a97d2.firebaseapp.com",
-    databaseURL: "https://coin-market-a97d2-default-rtdb.firebaseio.com",
-    projectId: "coin-market-a97d2",
-    storageBucket: "coin-market-a97d2.firebasestorage.app",
-    messagingSenderId: "642101451228",
-    appId: "1:642101451228:web:f06f1400773bb828401719",
-    measurementId: "G-CWG6899YZR"
+    apiKey: "AIzaSyB5LJ-mXCHhAtciuGm1owHgiYIDLuEM99Q",
+        authDomain: "coin-sell-bd.firebaseapp.com",
+        databaseURL: "https://coin-sell-bd-default-rtdb.firebaseio.com",
+        projectId: "coin-sell-bd",
+        storageBucket: "coin-sell-bd.firebasestorage.app",
+        messagingSenderId: "516956883825",
+        appId: "1:516956883825:web:b1a5a4f03a345c098f44d0",
+        measurementId: "G-LX6XTZC96Q"
 }; 
 firebase.initializeApp(firebaseConfig); 
 const db = firebase.database(); 
@@ -272,4 +272,5 @@ function renderPaymentList() { db.ref('paymentMethods').on('value', snap => { le
 window.onload = () => { document.getElementById('lock-screen').style.display = 'flex'; };
 </script> 
 </body> 
+
 </html>
