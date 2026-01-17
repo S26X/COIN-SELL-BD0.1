@@ -358,18 +358,17 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
             </header>
 
             <div class="adm-stats-row">
-   <div class="stat-box">
-            <small>PENDING ORDERS</small>
-            <h3 id="stat-pending-count" style="color:var(--warning)">0</h3>
-        </div>
+                <div class="adm-stat-box">
+                    <small>Pending Orders</small>
+                    <h3 id="adm-display-pending">0</h3>
+                </div>
+            </div>
 
-           <div class="adm-tab-menu">
-    <div class="tab active" id="tab-btn-pending" onclick="filterTab('pending', this)">
-                PENDING <span class="tab-count" id="count-pending">0</span>
-            </div> 
-    <div class="adm-tab" onclick="switchAdminTab('history', this)">HISTORY</div>
-    <div class="adm-tab" onclick="switchAdminTab('settings', this)">SETTINGS</div>
-</div>
+            <div class="adm-tab-menu">
+                <div class="adm-tab active" onclick="switchAdminTab('pending', this)">PENDING</div>
+                <div class="adm-tab" onclick="switchAdminTab('history', this)">HISTORY</div>
+                <div class="adm-tab" onclick="switchAdminTab('settings', this)">SETTINGS</div>
+            </div>
 
             <div id="admin-dynamic-content">
                 </div>
@@ -484,13 +483,13 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
             <button onclick="closeAdminPanel()" style="background:#f1f5f9; border:none; padding:10px 15px; border-radius:12px; font-weight:800;">EXIT</button>
         </div>
 
-<div class="adm-stats-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-    <div class="adm-stat-box" style="background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
-        <small style="color: var(--subtext); display: block; margin-bottom: 5px; font-size: 12px;">Pending Orders</small>
-        <h3 id="adm-display-pending" style="font-size: 24px; color: #f59e0b; margin: 0; font-weight: 800;">0</h3>
+ <div class="adm-container">
+    <div class="adm-stats-row" style="display: block; margin-bottom: 15px;">
+        <div class="adm-stat-box" style="padding: 20px; border-bottom: 4px solid #f59e0b; text-align: center;">
+            <small style="color: #64748b; font-weight: 800; text-transform: uppercase; font-size: 10px;">Total Pending Orders</small>
+            <h3 id="stat-pending-count" style="color: #f59e0b; font-size: 32px; margin: 10px 0 0;">0</h3>
+        </div>
     </div>
-    
-</div>
 
     <div class="adm-tab-menu" style="display: flex; background: #f1f5f9; border-radius: 15px; padding: 5px; gap: 5px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
         <div class="adm-tab active" onclick="filterTab('pending', this)" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 12px; font-weight: 800; font-size: 11px;">
@@ -920,40 +919,30 @@ function closeAdminPanel() {
 }
 
    function startAdminEngine() {
-    console.log("Admin Engine: Online");
-
-    // Real-time Pending Order Counter
+    // Real-time Orders Listener
     db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
-        let pendingTotal = 0;
+        let counts = { pending: 0, completed: 0, rejected: 0 };
         
-        // Database er sob order check korche
-        Object.values(orders).forEach(order => {
-            // Jodi status 'pending' hoy, tobe 1, 2, 3 kore barbe
-            if (order.status === 'pending') {
-                pendingTotal++;
-            }
+        Object.values(orders).forEach(o => {
+            if(counts[o.status] !== undefined) counts[o.status]++;
         });
 
-        // HTML e update korche
-        const pendingBox = document.getElementById('adm-display-pending');
-        if (pendingBox) {
-            pendingBox.innerText = pendingTotal;
-        }
-
-        // Dashboard-er list refresh (Settings tab-e na thakle)
-        if (typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
-            renderAdminData();
-        }
+        // Top Stat Update (Pending only)
+        document.getElementById('adm-display-pending').innerText = counts.pending;
+        
+        // Tab Counters Update
+        document.getElementById('count-pending').innerText = counts.pending;
+        document.getElementById('count-completed').innerText = counts.completed;
+        document.getElementById('count-rejected').innerText = counts.rejected;
+        
+        // Instant List Refresh
+        if(adminActiveTab !== 'settings') renderAdminData();
     });
 
-    // Real-time User Counter
-    db.ref('users').on('value', snap => {
-        const totalUsers = snap.numChildren() || 0;
-        const userBox = document.getElementById('adm-display-users');
-        if (userBox) {
-            userBox.innerText = totalUsers;
-        }
+    // Leaderboard/User count listener (Optional)
+    db.ref('leaderboard').on('value', s => {
+        // Users counting logic ekhane thakbe kintu upore display hobe na
     });
 }
 
