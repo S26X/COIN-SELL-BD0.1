@@ -926,27 +926,32 @@ function closeAdminPanel() {
         const orders = snap.val() || {};
         let counts = { pending: 0, completed: 0, rejected: 0 };
         
+        // সব অর্ডার থেকে পেন্ডিং কয়টি আছে তা গোনা হচ্ছে
         Object.values(orders).forEach(o => {
             if(counts[o.status] !== undefined) counts[o.status]++;
         });
 
-        // ১. উপরের মেইন স্ট্যাট বক্সে আপডেট (id="adm-display-pending")
-        const topDisplay = document.getElementById('adm-display-pending');
-        if(topDisplay) topDisplay.innerText = counts.pending;
+        // ১. ওপরের স্ট্যাট বক্সে সংখ্যা বসানো (id="adm-display-pending")
+        const mainDisplay = document.getElementById('adm-display-pending');
+        if(mainDisplay) {
+            mainDisplay.innerText = counts.pending;
+        }
+
+        // ২. যদি আপনার HTML-এ অন্য কোনো জায়গায় stat-pending-count আইডি থাকে
+        const statCount = document.getElementById('stat-pending-count');
+        if(statCount) {
+            statCount.innerText = counts.pending;
+        }
         
-        // ২. আপনার PENDING ট্যাবের ব্র্যাকেটের ভেতরে আপডেট (id="count-pending")
-        const tabCounter = document.getElementById('count-pending');
-        if(tabCounter) tabCounter.innerText = counts.pending;
-        
-        // ৩. লিস্ট অটোমেটিক রিফ্রেশ করা
+        // ৩. অ্যাডমিন ডেটা রিফ্রেশ করা (যদি সেটিংস ট্যাবে না থাকে)
         if(typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
             renderAdminData();
         }
     });
 
-    // Leaderboard listener
+    // Leaderboard listener (Optional)
     db.ref('leaderboard').on('value', s => {
-        // প্রয়োজনে এখানে লজিক দিতে পারেন
+        // logic here
     });
 }
 
