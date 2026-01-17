@@ -358,10 +358,10 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
             </header>
 
             <div class="adm-stats-row">
-                <div class="adm-stat-box">
-                    <small>Pending Orders</small>
-                    <h3 id="adm-display-pending">0</h3>
-                </div>
+    <div class="adm-stat-box">
+        <small>Pending Orders</small>
+        <h3 id="adm-display-pending">0</h3>
+    </div>
             </div>
 
            <div class="adm-tab-menu">
@@ -485,12 +485,10 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
             <button onclick="closeAdminPanel()" style="background:#f1f5f9; border:none; padding:10px 15px; border-radius:12px; font-weight:800;">EXIT</button>
         </div>
 
- <div class="adm-container">
-    <div class="adm-stats-row" style="display: block; margin-bottom: 15px;">
-        <div class="adm-stat-box" style="padding: 20px; border-bottom: 4px solid #f59e0b; text-align: center;">
-            <small style="color: #64748b; font-weight: 800; text-transform: uppercase; font-size: 10px;">Total Pending Orders</small>
-            <h3 id="stat-pending-count" style="color: #f59e0b; font-size: 32px; margin: 10px 0 0;">0</h3>
-        </div>
+ <div class="adm-stats-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+    <div class="adm-stat-box" style="background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
+        <small style="color: var(--subtext); display: block; margin-bottom: 5px; font-size: 12px;">Pending Orders</small>
+        <h3 id="adm-display-pending" style="font-size: 24px; color: #f59e0b; margin: 0;">0</h3>
     </div>
 
     <div class="adm-tab-menu" style="display: flex; background: #f1f5f9; border-radius: 15px; padding: 5px; gap: 5px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
@@ -921,38 +919,41 @@ function closeAdminPanel() {
 }
 
    function startAdminEngine() {
-    // Real-time Orders Listener (Firebase থেকে ডেটা পড়া হচ্ছে)
+    console.log("Admin Engine Started...");
+
+    // ১. Real-time Orders Listener (Pending Count এর জন্য)
     db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
         let counts = { pending: 0, completed: 0, rejected: 0 };
         
-        // সব অর্ডার লুপ করে স্ট্যাটাস অনুযায়ী গোনা হচ্ছে
+        // সব অর্ডার লুপ করে স্ট্যাটাস চেক করা হচ্ছে
         Object.values(orders).forEach(o => {
             if(o.status === 'pending') counts.pending++;
             if(o.status === 'completed') counts.completed++;
             if(o.status === 'rejected') counts.rejected++;
         });
 
-        // ওপরের সেই স্ট্যাট বক্সে সংখ্যাটি বসানো (যেখানে 0 হয়ে আছে)
+        // ওপরের স্ট্যাট বক্সে সংখ্যাটি বসানো
         const displayPending = document.getElementById('adm-display-pending');
         if(displayPending) {
             displayPending.innerText = counts.pending;
         }
         
-        // অ্যাডমিন লিস্ট রিফ্রেশ করা (যদি সেটিংস ট্যাবে না থাকে)
+        // লিস্ট রিফ্রেশ করা (যদি সেটিংস ট্যাবে না থাকে)
         if(typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
             renderAdminData();
         }
     });
 
-    // Leaderboard listener (User count এর জন্য)
+    // ২. Users Listener (Total Users Count এর জন্য)
     db.ref('users').on('value', s => {
         const users = s.val() || {};
         const userCount = Object.keys(users).length;
         
-        // যদি আপনার উপরে Total Users বক্স থাকে তবে সেটিও আপডেট হবে
         const displayUsers = document.getElementById('adm-display-users');
-        if(displayUsers) displayUsers.innerText = userCount;
+        if(displayUsers) {
+            displayUsers.innerText = userCount;
+        }
     });
 }
 
