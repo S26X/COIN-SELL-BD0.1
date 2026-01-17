@@ -485,12 +485,11 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
             <button onclick="closeAdminPanel()" style="background:#f1f5f9; border:none; padding:10px 15px; border-radius:12px; font-weight:800;">EXIT</button>
         </div>
 
- <div class="adm-stats-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-    <div class="adm-stat-box" style="background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
-        <small style="color: #94a3b8; display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600;">Pending Orders</small>
-        <h3 id="adm-display-pending" style="font-size: 28px; color: #f59e0b; margin: 0; font-weight: 800;">0</h3>
+<div class="adm-stats-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+    <div class="adm-stat-box" style="background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
+        <small style="color: var(--subtext); display: block; margin-bottom: 5px; font-size: 12px;">Pending Orders</small>
+        <h3 id="adm-display-pending" style="font-size: 24px; color: #f59e0b; margin: 0;">0</h3>
     </div>
-</div>
 
     <div class="adm-tab-menu" style="display: flex; background: #f1f5f9; border-radius: 15px; padding: 5px; gap: 5px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
         <div class="adm-tab active" onclick="filterTab('pending', this)" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 12px; font-weight: 800; font-size: 11px;">
@@ -920,31 +919,39 @@ function closeAdminPanel() {
 }
 
    function startAdminEngine() {
-    // Orders Listener
+    console.log("Admin Engine Started...");
+
+    // Real-time Orders Listener (Pending update korar jonno)
     db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
-        let pCount = 0;
+        let pendingCount = 0;
         
-        // সব অর্ডার থেকে pending খুঁজে বের করা
-        Object.values(orders).forEach(o => {
-            if(o.status === 'pending') pCount++;
+        // Loop kore check korbe koyta order status 'pending'
+        Object.values(orders).forEach(order => {
+            if (order.status === 'pending') {
+                pendingCount++;
+            }
         });
 
-        // সরাসরি সংখ্যা বসানো
-        const el = document.getElementById('adm-display-pending');
-        if(el) el.innerText = pCount;
-        
-        // লিস্ট আপডেট
-        if(typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
+        // Stat box-er number update korche (1, 2, 3...)
+        const displayElem = document.getElementById('adm-display-pending');
+        if (displayElem) {
+            displayElem.innerText = pendingCount;
+        }
+
+        // List update (Jodi Settings tab-e na thaken)
+        if (typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
             renderAdminData();
         }
     });
 
-    // Users Listener
+    // Total Users count korar jonno
     db.ref('users').on('value', snap => {
-        const uCount = snap.numChildren() || 0;
-        const uEl = document.getElementById('adm-display-users');
-        if(uEl) uEl.innerText = uCount;
+        const userCount = snap.numChildren() || 0;
+        const userElem = document.getElementById('adm-display-users');
+        if (userElem) {
+            userElem.innerText = userCount;
+        }
     });
 }
 
