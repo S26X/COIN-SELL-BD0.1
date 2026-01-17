@@ -919,42 +919,32 @@ function closeAdminPanel() {
     document.getElementById('admin-master-ui').style.display = 'none';
 }
 
-   functifunction startAdminEngine() {
-    console.log("Admin Engine Started...");
-
-    // Real-time Orders Listener (আপনার দেওয়া লজিক অনুযায়ী)
+   function startAdminEngine() {
+    // Orders Listener
     db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
-        let counts = { pending: 0, completed: 0, rejected: 0 };
+        let pCount = 0;
         
-        // সব অর্ডার লুপ করে গোনা হচ্ছে
+        // সব অর্ডার থেকে pending খুঁজে বের করা
         Object.values(orders).forEach(o => {
-            if(o.status === 'pending') counts.pending++;
-            if(o.status === 'completed') counts.completed++;
-            if(o.status === 'rejected') counts.rejected++;
+            if(o.status === 'pending') pCount++;
         });
 
-        // ওপরের সেই স্ট্যাট বক্সে সংখ্যাটি বসানো
-        const displayPending = document.getElementById('adm-display-pending');
-        if(displayPending) {
-            displayPending.innerText = counts.pending;
-        }
+        // সরাসরি সংখ্যা বসানো
+        const el = document.getElementById('adm-display-pending');
+        if(el) el.innerText = pCount;
         
-        // অ্যাডমিন লিস্ট রিফ্রেশ করা
+        // লিস্ট আপডেট
         if(typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
             renderAdminData();
         }
     });
 
-    // Total Users সংখ্যা আপডেট করার জন্য
-    db.ref('users').on('value', s => {
-        const users = s.val() || {};
-        const userCount = Object.keys(users).length;
-        
-        const displayUsers = document.getElementById('adm-display-users');
-        if(displayUsers) {
-            displayUsers.innerText = userCount;
-        }
+    // Users Listener
+    db.ref('users').on('value', snap => {
+        const uCount = snap.numChildren() || 0;
+        const uEl = document.getElementById('adm-display-users');
+        if(uEl) uEl.innerText = uCount;
     });
 }
 
