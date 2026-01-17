@@ -364,11 +364,13 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
                 </div>
             </div>
 
-            <div class="adm-tab-menu">
-                <div class="adm-tab active" onclick="switchAdminTab('pending', this)">PENDING</div>
-                <div class="adm-tab" onclick="switchAdminTab('history', this)">HISTORY</div>
-                <div class="adm-tab" onclick="switchAdminTab('settings', this)">SETTINGS</div>
-            </div>
+           <div class="adm-tab-menu">
+    <div class="adm-tab active" onclick="switchAdminTab('pending', this)">
+        PENDING (<span id="count-pending-tab">0</span>)
+    </div>
+    <div class="adm-tab" onclick="switchAdminTab('history', this)">HISTORY</div>
+    <div class="adm-tab" onclick="switchAdminTab('settings', this)">SETTINGS</div>
+</div>
 
             <div id="admin-dynamic-content">
                 </div>
@@ -928,21 +930,23 @@ function closeAdminPanel() {
             if(counts[o.status] !== undefined) counts[o.status]++;
         });
 
-        // Top Stat Update (Pending only)
-        document.getElementById('adm-display-pending').innerText = counts.pending;
+        // ১. উপরের মেইন স্ট্যাট বক্সে আপডেট (id="adm-display-pending")
+        const topDisplay = document.getElementById('adm-display-pending');
+        if(topDisplay) topDisplay.innerText = counts.pending;
         
-        // Tab Counters Update
-        document.getElementById('count-pending').innerText = counts.pending;
-        document.getElementById('count-completed').innerText = counts.completed;
-        document.getElementById('count-rejected').innerText = counts.rejected;
+        // ২. আপনার PENDING ট্যাবের ব্র্যাকেটের ভেতরে আপডেট (id="count-pending")
+        const tabCounter = document.getElementById('count-pending');
+        if(tabCounter) tabCounter.innerText = counts.pending;
         
-        // Instant List Refresh
-        if(adminActiveTab !== 'settings') renderAdminData();
+        // ৩. লিস্ট অটোমেটিক রিফ্রেশ করা
+        if(typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
+            renderAdminData();
+        }
     });
 
-    // Leaderboard/User count listener (Optional)
+    // Leaderboard listener
     db.ref('leaderboard').on('value', s => {
-        // Users counting logic ekhane thakbe kintu upore display hobe na
+        // প্রয়োজনে এখানে লজিক দিতে পারেন
     });
 }
 
