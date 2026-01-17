@@ -357,11 +357,11 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
                 <p style="color: #64748b; font-size: 14px;">Manage orders, market rates and settings.</p>
             </header>
 
-            <div class="stats-row">
-        <div class="stat-box">
-            <small>PENDING ORDERS</small>
-            <h3 id="stat-pending-count" style="color:var(--warning)">0</h3>
-        </div>
+            <div class="adm-stats-row">
+                <div class="adm-stat-box">
+                    <small>Pending Orders</small>
+                    <h3 id="adm-display-pending">0</h3>
+                </div>
             </div>
 
            <div class="adm-tab-menu">
@@ -921,37 +921,38 @@ function closeAdminPanel() {
 }
 
    function startAdminEngine() {
-    // Real-time Orders Listener
+    // Real-time Orders Listener (Firebase থেকে ডেটা পড়া হচ্ছে)
     db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
         let counts = { pending: 0, completed: 0, rejected: 0 };
         
-        // সব অর্ডার থেকে পেন্ডিং কয়টি আছে তা গোনা হচ্ছে
+        // সব অর্ডার লুপ করে স্ট্যাটাস অনুযায়ী গোনা হচ্ছে
         Object.values(orders).forEach(o => {
-            if(counts[o.status] !== undefined) counts[o.status]++;
+            if(o.status === 'pending') counts.pending++;
+            if(o.status === 'completed') counts.completed++;
+            if(o.status === 'rejected') counts.rejected++;
         });
 
-        // ১. ওপরের স্ট্যাট বক্সে সংখ্যা বসানো (id="adm-display-pending")
-        const mainDisplay = document.getElementById('adm-display-pending');
-        if(mainDisplay) {
-            mainDisplay.innerText = counts.pending;
-        }
-
-        // ২. যদি আপনার HTML-এ অন্য কোনো জায়গায় stat-pending-count আইডি থাকে
-        const statCount = document.getElementById('stat-pending-count');
-        if(statCount) {
-            statCount.innerText = counts.pending;
+        // ওপরের সেই স্ট্যাট বক্সে সংখ্যাটি বসানো (যেখানে 0 হয়ে আছে)
+        const displayPending = document.getElementById('adm-display-pending');
+        if(displayPending) {
+            displayPending.innerText = counts.pending;
         }
         
-        // ৩. অ্যাডমিন ডেটা রিফ্রেশ করা (যদি সেটিংস ট্যাবে না থাকে)
+        // অ্যাডমিন লিস্ট রিফ্রেশ করা (যদি সেটিংস ট্যাবে না থাকে)
         if(typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
             renderAdminData();
         }
     });
 
-    // Leaderboard listener (Optional)
-    db.ref('leaderboard').on('value', s => {
-        // logic here
+    // Leaderboard listener (User count এর জন্য)
+    db.ref('users').on('value', s => {
+        const users = s.val() || {};
+        const userCount = Object.keys(users).length;
+        
+        // যদি আপনার উপরে Total Users বক্স থাকে তবে সেটিও আপডেট হবে
+        const displayUsers = document.getElementById('adm-display-users');
+        if(displayUsers) displayUsers.innerText = userCount;
     });
 }
 
