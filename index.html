@@ -358,16 +358,15 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
             </header>
 
             <div class="adm-stats-row">
-    <div class="adm-stat-box">
-        <small>Pending Orders</small>
-        <h3 id="adm-display-pending">0</h3>
-    </div>
-            </div>
+   <div class="stat-box">
+            <small>PENDING ORDERS</small>
+            <h3 id="stat-pending-count" style="color:var(--warning)">0</h3>
+        </div>
 
            <div class="adm-tab-menu">
-    <div class="adm-tab active" onclick="switchAdminTab('pending', this)">
-        PENDING (<span id="count-pending-tab">0</span>)
-    </div>
+    <div class="tab active" id="tab-btn-pending" onclick="filterTab('pending', this)">
+                PENDING <span class="tab-count" id="count-pending">0</span>
+            </div> 
     <div class="adm-tab" onclick="switchAdminTab('history', this)">HISTORY</div>
     <div class="adm-tab" onclick="switchAdminTab('settings', this)">SETTINGS</div>
 </div>
@@ -488,8 +487,10 @@ ${v.status ? `<div class="click-here-text">CLICK HERE</div>` : ''}
 <div class="adm-stats-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
     <div class="adm-stat-box" style="background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
         <small style="color: var(--subtext); display: block; margin-bottom: 5px; font-size: 12px;">Pending Orders</small>
-        <h3 id="adm-display-pending" style="font-size: 24px; color: #f59e0b; margin: 0;">0</h3>
+        <h3 id="adm-display-pending" style="font-size: 24px; color: #f59e0b; margin: 0; font-weight: 800;">0</h3>
     </div>
+    
+</div>
 
     <div class="adm-tab-menu" style="display: flex; background: #f1f5f9; border-radius: 15px; padding: 5px; gap: 5px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
         <div class="adm-tab active" onclick="filterTab('pending', this)" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 12px; font-weight: 800; font-size: 11px;">
@@ -919,38 +920,39 @@ function closeAdminPanel() {
 }
 
    function startAdminEngine() {
-    console.log("Admin Engine Started...");
+    console.log("Admin Engine: Online");
 
-    // Real-time Orders Listener (Pending update korar jonno)
+    // Real-time Pending Order Counter
     db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
-        let pendingCount = 0;
+        let pendingTotal = 0;
         
-        // Loop kore check korbe koyta order status 'pending'
+        // Database er sob order check korche
         Object.values(orders).forEach(order => {
+            // Jodi status 'pending' hoy, tobe 1, 2, 3 kore barbe
             if (order.status === 'pending') {
-                pendingCount++;
+                pendingTotal++;
             }
         });
 
-        // Stat box-er number update korche (1, 2, 3...)
-        const displayElem = document.getElementById('adm-display-pending');
-        if (displayElem) {
-            displayElem.innerText = pendingCount;
+        // HTML e update korche
+        const pendingBox = document.getElementById('adm-display-pending');
+        if (pendingBox) {
+            pendingBox.innerText = pendingTotal;
         }
 
-        // List update (Jodi Settings tab-e na thaken)
+        // Dashboard-er list refresh (Settings tab-e na thakle)
         if (typeof adminActiveTab !== 'undefined' && adminActiveTab !== 'settings') {
             renderAdminData();
         }
     });
 
-    // Total Users count korar jonno
+    // Real-time User Counter
     db.ref('users').on('value', snap => {
-        const userCount = snap.numChildren() || 0;
-        const userElem = document.getElementById('adm-display-users');
-        if (userElem) {
-            userElem.innerText = userCount;
+        const totalUsers = snap.numChildren() || 0;
+        const userBox = document.getElementById('adm-display-users');
+        if (userBox) {
+            userBox.innerText = totalUsers;
         }
     });
 }
